@@ -1,113 +1,171 @@
 import 'package:flutter/material.dart';
+import 'package:app1/api.dart';
 
-class SpacedItemsList extends StatelessWidget {
-  const SpacedItemsList({Key? key}) : super(key: key);
+class TodosScreen extends StatelessWidget {
+  const TodosScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final dataList = [
-      {
-        "userId": 1,
-        "id": 1,
-        "title": "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-        "body": "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-      },
-      {
-        "userId": 1,
-        "id": 2,
-        "title": "qui est esse",
-        "body": "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque\nfugiat blanditiis voluptate porro vel nihil molestiae ut reiciendis\nqui aperiam non debitis possimus qui neque nisi nulla"
-      },
-      {
-        "userId": 1,
-        "id": 3,
-        "title": "ea molestias quasi exercitationem repellat qui ipsa sit aut",
-        "body": "et iusto sed quo iure\nvoluptatem occaecati omnis eligendi aut ad\nvoluptatem doloribus vel accusantium quis pariatur\nmolestiae porro eius odio et labore et velit aut"
-      },
-    ];
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Lista de Tareas')),
-      body: ListView.builder(
-        itemCount: dataList.length,
-        itemBuilder: (context, index) {
-          final tarea = Tarea.fromJson(dataList[index]);
-          return ItemWidget(tarea: tarea);
-        },
-      ),
-    );
-  }
-}
-
-class ItemWidget extends StatelessWidget {
-  final Tarea tarea;
-
-  const ItemWidget({Key? key, required this.tarea}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      color: const Color.fromARGB(255, 176, 154, 216),
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(builder: (context) => DetailScreen(id: tarea.id)),
-          );
-        },
-        child: SizedBox(
-          height: 100,
-          child: Center(
-            child: Text(
-              tarea.title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Color.fromARGB(255, 255, 255, 255),
-              ),
-            ),
-          ),
+      appBar: AppBar(title: const Text('TODOs')),
+      body: Center(
+        child: const Text(
+          'TODO',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
     );
   }
 }
 
-class DetailScreen extends StatelessWidget {
-  final int id;
-
-  const DetailScreen({Key? key, required this.id}) : super(key: key);
+class ProfileScreen extends StatelessWidget {
+  const ProfileScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Detalle de Tarea')),
+      appBar: AppBar(title: const Text('PROFILE')),
+      body: Center(
+        child: const Text(
+          'PROFILE',
+          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+}
+
+class PostScreen extends StatefulWidget {
+  const PostScreen({Key? key}) : super(key: key);
+
+  @override
+  _PostScreenState createState() => _PostScreenState();
+}
+
+class _PostScreenState extends State<PostScreen> {
+  late Future<List<dynamic>> _posts;
+
+  @override
+  void initState() {
+    super.initState();
+    _posts = fetchPosts();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('POSTS')),
+      body: FutureBuilder<List<dynamic>>(
+        future: _posts,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(child: Text('No posts available.'));
+          } else {
+            final posts = snapshot.data!;
+            return ListView.builder(
+              itemCount: posts.length,
+              itemBuilder: (context, index) {
+                final post = posts[index];
+                return Dismissible(
+                  key: Key(post['id'].toString()), // Key to differentiate items
+                  direction: DismissDirection.horizontal,
+                  onDismissed: (direction) {
+                    if (direction == DismissDirection.startToEnd) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Item archivado o guardado')),
+                      );
+                    } else if (direction == DismissDirection.endToStart) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Item eliminado o compartido')),
+                      );
+                    }
+                  },
+                  background: Container(
+                    color: Colors.blue,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          children: const [
+                            Icon(Icons.save, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text('Guardar', style: TextStyle(color: Colors.white)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  secondaryBackground: Container(
+                    color: Colors.red,
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: const [
+                            Icon(Icons.delete, color: Colors.white),
+                            SizedBox(width: 8),
+                            Text('Eliminar', style: TextStyle(color: Colors.white)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => PostDetailScreen(id: post['id']),
+                        ),
+                      );
+                    },
+                    child: ListTile(
+                      title: Text(post['title']),
+                      subtitle: Text(post['body']),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.share, color: Colors.blue),
+                        onPressed: () {
+                          // Implement the share functionality here
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Compartir')),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                );
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+}
+
+class PostDetailScreen extends StatelessWidget {
+  final int id;
+
+  const PostDetailScreen({Key? key, required this.id}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Detalle del Post')),
       body: Center(
         child: Text(
-          'ID de la tarea: $id',
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          'ID del post: $id',
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
         ),
       ),
     );
   }
 }
-
-class Tarea {
-  final int userId;
-  final int id;
-  final String title;
-  final String body;
-
-  Tarea({required this.userId, required this.id, required this.title, required this.body});
-
-  factory Tarea.fromJson(Map<String, dynamic> json) {
-    return Tarea(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
-      body: json['body'],
-    );
-  }
-}
-
 
 

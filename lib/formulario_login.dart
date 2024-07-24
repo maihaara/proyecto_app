@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:app1/api.dart'; 
 import 'package:app1/list_items.dart';
 
 class MyCustomFormWithNavigation extends StatefulWidget {
@@ -12,12 +13,11 @@ class _MyCustomFormWithNavigationState extends State<MyCustomFormWithNavigation>
   final _formKey = GlobalKey<FormState>();
   final _userController = TextEditingController();
   final _passwordController = TextEditingController();
-
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       await Future.delayed(const Duration(seconds: 2));
       Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => const SpacedItemsList()),
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     }
   }
@@ -64,6 +64,56 @@ class _MyCustomFormWithNavigationState extends State<MyCustomFormWithNavigation>
             ),
           ),
         ),
+      ),
+    );
+  }
+
+
+}
+
+
+
+
+
+
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Inicio'),
+      ),
+      body: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const PostScreen()),
+              );
+            },
+            child: const Text('POST'),
+
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: 
+                (context) => const TodosScreen()),
+              );
+            },
+            child: const Text('TODOs'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (context) => const ProfileScreen()),
+              );
+            },
+            child: const Text('PROFILE'),
+          ),
+        ],
       ),
     );
   }

@@ -1,3 +1,5 @@
+//función para obtener datos de la API
+
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 

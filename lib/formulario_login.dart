@@ -1,22 +1,24 @@
-import 'package:flutter/material.dart';
-import 'package:app1/api.dart'; 
-import 'package:app1/list_items.dart';
+//el login
 
-class MyCustomFormWithNavigation extends StatefulWidget {
-  const MyCustomFormWithNavigation({super.key});
+import 'package:flutter/material.dart';
+import 'home_screens.dart';
+
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  _MyCustomFormWithNavigationState createState() => _MyCustomFormWithNavigationState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _MyCustomFormWithNavigationState extends State<MyCustomFormWithNavigation> {
+class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final _userController = TextEditingController();
   final _passwordController = TextEditingController();
+
   void _submitForm() async {
     if (_formKey.currentState!.validate()) {
       await Future.delayed(const Duration(seconds: 2));
-      Navigator.of(context).push(
+      Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (context) => const HomeScreen()),
       );
     }
@@ -64,56 +66,6 @@ class _MyCustomFormWithNavigationState extends State<MyCustomFormWithNavigation>
             ),
           ),
         ),
-      ),
-    );
-  }
-
-
-}
-
-
-
-
-
-
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Inicio'),
-      ),
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const PostScreen()),
-              );
-            },
-            child: const Text('POST'),
-
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: 
-                (context) => const TodosScreen()),
-              );
-            },
-            child: const Text('TODOs'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (context) => const ProfileScreen()),
-              );
-            },
-            child: const Text('PROFILE'),
-          ),
-        ],
       ),
     );
   }

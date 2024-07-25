@@ -1,5 +1,7 @@
+//pantallas secundarias de la ap
+
 import 'package:flutter/material.dart';
-import 'package:app1/api.dart';
+import 'api.dart';
 
 class TodosScreen extends StatelessWidget {
   const TodosScreen({Key? key}) : super(key: key);
@@ -71,7 +73,7 @@ class _PostScreenState extends State<PostScreen> {
               itemBuilder: (context, index) {
                 final post = posts[index];
                 return Dismissible(
-                  key: Key(post['id'].toString()), // Key to differentiate items
+                  key: Key(post['id'].toString()),
                   direction: DismissDirection.horizontal,
                   onDismissed: (direction) {
                     if (direction == DismissDirection.startToEnd) {
@@ -131,7 +133,6 @@ class _PostScreenState extends State<PostScreen> {
                       trailing: IconButton(
                         icon: const Icon(Icons.share, color: Colors.blue),
                         onPressed: () {
-                          // Implement the share functionality here
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(content: Text('Compartir')),
                           );

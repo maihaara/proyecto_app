@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app1/formulario_login.dart';
+import 'formulario_login.dart';
 
 void main() => runApp(const MyApp());
 
@@ -15,13 +15,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyCustomFormWithNavigation(),
+      home: const LoginScreen(), // Pantalla de inicio de sesión
     );
   }
 }
-
-
-
-
-
-

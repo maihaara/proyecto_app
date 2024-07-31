@@ -1,5 +1,6 @@
 //pantalla principal con la barra de navegación y las pantallas secundarias
 
+
 import 'package:flutter/material.dart';
 import 'barra_navigation.dart';
 import 'screens.dart';
@@ -27,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen> {
         index: _selectedIndex,
         children: <Widget>[
           const PostScreen(),
-          const TodosScreen(),
+          const TodosScreen(), // Asegúrate de que esta pantalla esté importada y lista
           const ProfileScreen(),
         ],
       ),
